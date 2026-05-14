@@ -74,6 +74,27 @@ export const monthlyDashBoardLogic= async (req, res) => {
             }
         ]);
 
+        const todayData = metrics[0] || { totalSales : 0, totalRevenue : 0 };
+
+        const metrics = await Sale.aggregate([
+            {
+                $match:{
+                    userId : new mongoose.Types.ObjectId(userId),
+                    createdAt : {
+                        $gte : startOfDate,
+                        $lte : endOfToday
+                    }
+                }
+            },
+            {
+                $group : {
+                    _id : null,
+                    totalSales : { $sum : 1 },
+                    totalRevenue : { $sum: "$totalAmount" }
+                }
+            }
+        ]);
+
         const expenseMetrics = await Expense.aggregate([
             {
                 $match:{
@@ -99,13 +120,17 @@ export const monthlyDashBoardLogic= async (req, res) => {
 
         res.status(200).json({
             status : "Success",
+            dailySales : {
+                totalSales : todayData.totalSales,
+                totalRevenue : todayData.totalRevenue
+            },
             monthSales : {
                 totalSales : currentMonthData.totalSales,
                 totalRevenue : currentMonthData.totalRevenue
             },
             monthExpense : {
-                totalSales : currentMonthExpense.totalExpense,
-                totalRevenue : currentMonthExpense.totalExpenseAmount
+                totalExpenses : currentMonthExpense.totalExpense,
+                totalAmount : currentMonthExpense.totalExpenseAmount
             }
         })
     } catch (error) {
