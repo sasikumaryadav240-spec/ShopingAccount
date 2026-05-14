@@ -35,7 +35,7 @@ export const updateExpense = async (req, res) => {
         const expense = await Expense.findOneAndUpdate(
             { _id: expenseId, userId: userId },
             req.body,
-            { new : true }
+            { new : true, runValidators: true}
         );
 
         if(!expense) return res.status(400).json({
@@ -44,10 +44,11 @@ export const updateExpense = async (req, res) => {
         });
 
         res.status(200).json({
+            status: "success",
             expense
         });
     } catch (error) {
-        res.status(500).json(error.message);
+         res.status(500).json({ status: "error", message: error.message });
     }
 }
 
