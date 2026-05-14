@@ -2,48 +2,6 @@ import { Sale } from "../Models/sale.js";
 import { Expense } from "../Models/expense.js";
 import mongoose from "mongoose";
 
-export const dailyDashBoardLogic= async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const startOfDate = new Date();
-        startOfDate.setHours(0,0,0,0);
-
-        const endOfToday = new Date();
-        endOfToday.setHours(23, 59, 59, 999);
-
-        const metrics = await Sale.aggregate([
-            {
-                $match:{
-                    userId : new mongoose.Types.ObjectId(userId),
-                    createdAt : {
-                        $gte : startOfDate,
-                        $lte : endOfToday
-                    }
-                }
-            },
-            {
-                $group : {
-                    _id : null,
-                    totalSales : { $sum : 1 },
-                    totalRevenue : { $sum: "$totalAmount" }
-                }
-            }
-        ]);
-
-        const todayData = metrics[0] || { totalSales : 0, totalRevenue : 0 };
-
-        res.status(200).json({
-            status : "Success",
-            data : {
-                totalSales : todayData.totalSales,
-                totalRevenue : todayData.totalRevenue
-            }
-        })
-    } catch (error) {
-        res.status(500).json(error.message);
-    }
-}
-
 export const monthlyDashBoardLogic= async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -51,6 +9,9 @@ export const monthlyDashBoardLogic= async (req, res) => {
         startOfDate.getMonth();
         startOfDate.setDate(1);
         startOfDate.setHours(0,0,0,0)
+
+        const start = new Date();
+        start.setHours(0,0,0,0);
 
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
@@ -60,7 +21,7 @@ export const monthlyDashBoardLogic= async (req, res) => {
                 $match:{
                     userId : new mongoose.Types.ObjectId(userId),
                     createdAt : {
-                        $gte : new Date().setHours(0,0,0,0),
+                        $gte : start,
                         $lte : endOfToday
                     }
                 }
