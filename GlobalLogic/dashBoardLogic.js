@@ -60,7 +60,7 @@ export const monthlyDashBoardLogic= async (req, res) => {
                 $match:{
                     userId : new mongoose.Types.ObjectId(userId),
                     createdAt : {
-                        $gte : startOfDate,
+                        $gte : new Date().setHours(0,0,0,0),
                         $lte : endOfToday
                     }
                 }
