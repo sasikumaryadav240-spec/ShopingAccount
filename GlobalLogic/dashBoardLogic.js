@@ -55,7 +55,7 @@ export const monthlyDashBoardLogic= async (req, res) => {
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
 
-        const metrics = await Sale.aggregate([
+        const todayMetrics = await Sale.aggregate([
             {
                 $match:{
                     userId : new mongoose.Types.ObjectId(userId),
@@ -74,7 +74,7 @@ export const monthlyDashBoardLogic= async (req, res) => {
             }
         ]);
 
-        const todayData = metrics[0] || { totalSales : 0, totalRevenue : 0 };
+        const todayData = todayMetrics[0] || { totalSales : 0, totalRevenue : 0 };
 
         const metrics = await Sale.aggregate([
             {
