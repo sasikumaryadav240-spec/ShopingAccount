@@ -29,8 +29,11 @@ export const createExpense = async (req, res) => {
 
 export const updateExpense = async (req, res) => {
     try {
+        const expenseId = req.params.id;
+        const userId = req.user.userId;
+
         const expense = await Expense.findOneAndUpdate(
-            req.params.id,
+            { _id: expenseId, userId: userId },
             req.body,
             { new : true }
         );
