@@ -29,13 +29,12 @@ export const createExpense = async (req, res) => {
 
 export const updateExpense = async (req, res) => {
     try {
-        const expenseId = req.params.id;
         const userId = req.user.userId;
 
         const expense = await Expense.findOneAndUpdate(
-            { _id: expenseId, userId: userId },
-            req.body,
-            { new : true, runValidators: true}
+            { _id: req.params.id, userId: req.user.userId }, 
+            req.body, 
+            { new: true }
         );
 
         if(!expense) return res.status(400).json({
