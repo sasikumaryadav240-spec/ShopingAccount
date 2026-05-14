@@ -29,7 +29,7 @@ export const createExpense = async (req, res) => {
 
 export const updateExpense = async (req, res) => {
     try {
-        const expense = await Expense.findByIdAndUpdate(
+        const expense = await Expense.findOneAndUpdate(
             req.params.id,
             req.body,
             { new : true }
