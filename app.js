@@ -26,6 +26,4 @@ app.use("/api", verifyToken, salesLogicRouter);
 app.use("/api", verifyToken, montlyRouter);
 app.use("/api", verifyToken, profileRouter);
 
-const port = process.env.PORT;
-
-app.listen(port);
+app.listen(5000);
