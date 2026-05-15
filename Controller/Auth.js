@@ -4,16 +4,15 @@ import dotenv from "dotenv";
 
 export const signIn = async (req, res) => {
     const { name, email, password, shopName } = req.body;
-
     try {
-
-        const oldUser = await User.findOne({ email });
+        const normalizedEmail = email.toLowerCase();
+        const oldUser = await User.findOne({ normalizedEmail });
         if(oldUser) return res.status(400).json({
             status : "failed",
             message : "User Already Exists"
         })
         const user = await User.create({
-            name,
+            normalizedEmail,
             email,
             password,
             shopName
@@ -33,8 +32,8 @@ export const signIn = async (req, res) => {
 export const loginIn = async (req, res) => {
     const { email, password } = req.body;
     try {
-
-        const oldUser = await User.findOne({ email });
+        const normalizedEmail = email.toLowerCase();
+        const oldUser = await User.findOne({ normalizedEmail });
         if(!oldUser) return res.status(404).json({
             status : "failed",
             message : "User Doesn't Exists"
