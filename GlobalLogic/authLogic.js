@@ -1,6 +1,7 @@
 import { User } from "../Models/user.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const changePassword = async (req, res) => {
     const userId = req.user.userId;
