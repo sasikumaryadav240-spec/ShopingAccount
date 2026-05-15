@@ -232,7 +232,7 @@ export const monthTopProducts = async (req, res) => {
                     _id : "$products.productId",
                     productName : { $first : "$products.name"},
                     totalSales : { $sum : "$products.quantity" },
-                    totalAmount : { $sum : { $multiply : [ "$products.quantity", "$products.price" ]} }
+                    totalAmount : { $sum :  "$products.price" }
                 }
             },
             {
