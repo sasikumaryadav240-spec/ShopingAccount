@@ -5,5 +5,3 @@ export const authRouter = express.Router();
 
 authRouter.post("/signIn", signIn);
 authRouter.post("/login", loginIn);
-authRouter.put("/changePassword", changePassword);
-authRouter.post("/refreshToken", newrefreshToken);
