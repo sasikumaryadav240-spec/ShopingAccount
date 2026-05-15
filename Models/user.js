@@ -4,7 +4,8 @@ import bcrypt from "bcrypt";
 const userModel = new mongoose.Schema({
     name : {
         type : String,
-        trim: true
+        trim: true,
+        required : true
     },
     email : {
         required : true,
@@ -20,7 +21,13 @@ const userModel = new mongoose.Schema({
     },
     shopName : {
         type : String,
-        trim : true
+        trim : true,
+        required : true
+    },
+    shopLocation : {
+        type : String,
+        trim : true,
+        required : true
     },
     refreshToken: {
         type: String,

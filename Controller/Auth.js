@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 export const signIn = async (req, res) => {
-    const { name, email, password, shopName } = req.body;
+    const { name, email, password, shopName, shopLocation } = req.body;
     try {
         const normalizedEmail = email.toLowerCase();
         const oldUser = await User.findOne({ normalizedEmail });
@@ -15,7 +15,8 @@ export const signIn = async (req, res) => {
             normalizedEmail,
             email,
             password,
-            shopName
+            shopName,
+            shopLocation
         });
 
         res.status(201).json({
