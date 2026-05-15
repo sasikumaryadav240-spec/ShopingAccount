@@ -85,8 +85,13 @@ export const changePassword = async (req, res) => {
             return res.status(400).json("Passwords didn't match!");
         }
 
-        userDetails.password = password;
-        await userDetails.save();
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        await User.findByIdAndUpdate(
+            userId,
+            { $set: { password: hashedPassword } }
+        );
 
         res.status(200).json("Passwords Successfully Changed");
     } catch (error) {
