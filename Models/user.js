@@ -10,6 +10,7 @@ const userModel = new mongoose.Schema({
         required : true,
         type : String,
         unique : true,
+        lowercase: true,
         trim : true
     },
     password : {
