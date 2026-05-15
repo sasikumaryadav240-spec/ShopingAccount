@@ -1,7 +1,6 @@
 import { User } from "../Models/user.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import bcrypt from "bcrypt";
 
 export const signIn = async (req, res) => {
     const { name, email, password, shopName, shopLocation } = req.body;
@@ -86,10 +85,7 @@ export const changePassword = async (req, res) => {
             return res.status(400).json("Passwords didn't match!");
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        userDetails.password = hashedPassword;
+        userDetails.password = password;
         await userDetails.save();
 
         res.status(200).json("Passwords Successfully Changed");
