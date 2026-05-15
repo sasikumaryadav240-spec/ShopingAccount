@@ -129,11 +129,11 @@ export const monthlyHistory = async (req, res) => {
     }
 }
 
-export const fullYearHistoy = async (res, req) => {
+export const fullYearHistoy = async (req, res) => {
     try {
         const userId = req.user.userId;
         const startOfDate = new Date();
-        startOfDate.setMonth(startOfDate.getMonth() - 12);
+        startOfDate.setMonth(startOfDate.getMonth() - 11);
         startOfDate.setHours(0,0,0,0);
 
         const endOfData = new Date();
@@ -149,6 +149,7 @@ export const fullYearHistoy = async (res, req) => {
                 noOfSales: 0,
                 totalRevenue: 0
             });
+            currentLoopDate.setDate(1);
             currentLoopDate.setMonth(currentLoopDate.getMonth() + 1);
         }
 
