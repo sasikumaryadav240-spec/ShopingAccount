@@ -75,12 +75,12 @@ export const loginIn = async (req, res) => {
 export const changePassword = async (req, res) => {
     const userId = req.user.userId;
 
-    const { password } = req.body;
+    const { currentPassword, password } = req.body;
 
     try {
         const userDetails = await User.findOne({ _id : userId });
 
-        const confirmPassword = await User.comparedPassword(password);
+        const confirmPassword = await User.comparedPassword(currentPassword);
         if(!confirmPassword){
             return res.status(400).json("Passwords didn't match!");
         }
