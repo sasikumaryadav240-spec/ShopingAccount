@@ -1,4 +1,4 @@
-import { mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 const productModel = new mongoose.Schema({
     userId : {
@@ -13,12 +13,16 @@ const productModel = new mongoose.Schema({
     },
     price : {
         required : true,
-        type : Number,
-        trim : true
+        type : Number
     },
     quantity : {
         required : true,
         type : Number,
+    },
+    image : {
+        required : true,
+        required : false,
+        default : "default.png"
     }
 },{
     timestamps : true,
