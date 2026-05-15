@@ -33,7 +33,7 @@ export const loginIn = async (req, res) => {
     const { email, password } = req.body;
     try {
         const normalizedEmail = email.toLowerCase();
-        const oldUser = await User.findOne({ normalizedEmail });
+        const oldUser = await User.findOne({ email: normalizedEmail });
         if(!oldUser) return res.status(404).json({
             status : "failed",
             message : "User Doesn't Exists"
