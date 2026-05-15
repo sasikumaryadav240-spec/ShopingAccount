@@ -19,11 +19,6 @@ const productModel = new mongoose.Schema({
     quantity : {
         required : true,
         type : Number,
-    },
-    image: {
-        type: String,
-        required: false,
-        default: "default-product.jpg"
     }
 },{
     timestamps : true,
