@@ -128,3 +128,133 @@ export const monthlyHistory = async (req, res) => {
         return res.status(500).json(error.message);
     }
 }
+
+export const fullYearHistoy = async (res, req) => {
+    try {
+        const userId = req.user.userId;
+        const startOfDate = new Date();
+        startOfDate.setMonth(startOfDate.getMonth() - 12);
+        startOfDate.setHours(0,0,0,0);
+
+        const endOfData = new Date();
+        endOfData.setHours(23,59,59,999);
+
+        const default12Months = [];
+        let currentLoopDate = new Date(startOfDate);
+
+        while (currentLoopDate <= endOfData) {
+            default12Months.push({
+                year: currentLoopDate.getFullYear(),
+                month: currentLoopDate.getMonth() + 1,
+                noOfSales: 0,
+                totalRevenue: 0
+            });
+            currentLoopDate.setMonth(currentLoopDate.getMonth() + 1);
+        }
+
+        const yearMetrics = await Sale.aggregate([
+            {
+                $match : {
+                    userId : new mongoose.Types.ObjectId(userId),
+                    createdAt : {
+                        $gte : startOfDate,
+                        $lte : endOfData
+                    }
+                }
+            },
+            {
+                $project : {
+                    year : { $year : "$createdAt" },
+                    month : { $month : "$createdAt" },
+                    totalAmount : 1
+                }
+            },
+            {
+                $group : {
+                    _id : {
+                        year : "$year",
+                        month : "$month"
+                    },
+                    noOfSales : { $sum : 1 },
+                    totalRevenue : { $sum : "$totalAmount" }
+                }
+            }
+        ]);
+
+        const finalizedHistory = default12Months.map((defaultMonth) => {
+            const realDataMatch = yearMetrics.find(
+                (dbRecord) => dbRecord._id.year === defaultMonth.year && dbRecord._id.month === defaultMonth.month
+            );
+
+            return realDataMatch ? {
+                year: defaultMonth.year,
+                month: defaultMonth.month,
+                noOfSales: realDataMatch.noOfSales,
+                totalRevenue: realDataMatch.totalRevenue
+            } : defaultMonth;
+        });
+
+        res.status(200).json({
+            status: "success",
+            yearMetrics: finalizedHistory
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+export const monthTopProducts = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const startOfDate = new Date();
+        startOfDate.setDate(1);
+        startOfDate.setHours(0,0,0,0);
+
+        const endOfDate = new Date();
+        endOfDate.setHours(23,59,59,999);
+
+        const topSales = await Sale.aggregate([
+            {
+                $match : {
+                    userId : new mongoose.Types.ObjectId(userId),
+                    createdAt : {
+                        $gte : startOfDate,
+                        $lte : endOfDate
+                    }
+                }
+            },
+            {
+                $unwind: "$products"
+            },
+            {
+                $group : {
+                    _id : "$products._id",
+                    productName : { $first : "$products.name"},
+                    totalSales : { $sum : "$products.quantity" },
+                    totalAmount : { $sum : { $multiply : [ "$products.quantity", "$products.price" ]} }
+                }
+            },
+            {
+                $sort : {
+                    totalAmount : -1
+                }
+            },
+            {
+                $project : {
+                    _id : 1,
+                    productName : 1,
+                    totalSales : 1,
+                    totalAmount : 1
+                }
+            }
+        ]);
+
+        res.status(200).json({
+            status: "success",
+            metrics: topProducts
+        });
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
