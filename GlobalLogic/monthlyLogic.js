@@ -252,7 +252,7 @@ export const monthTopProducts = async (req, res) => {
 
         res.status(200).json({
             status: "success",
-            metrics: topProducts
+            metrics: topSales
         });
     } catch (error) {
         res.status(500).json(error.message);
