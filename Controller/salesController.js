@@ -75,7 +75,7 @@ export const getSales = async (req, res) => {
     const userId = req.user.userId;
 
     try {
-        const sale = await Sale.findOne({ userId });
+        const sale = await Sale.find({ userId : userId });
 
         if(!sale) return res.status(404).json({
             status : "failed",
