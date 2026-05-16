@@ -22,7 +22,7 @@ const productModel = new mongoose.Schema({
     image : {
         type : String,
         required : false,
-        default : "default.png"
+        default : "https://res.cloudinary.com/diyierfkp/image/upload/f_auto,q_auto/Main_small_shop_image_dxguyw"
     }
 },{
     timestamps : true,
