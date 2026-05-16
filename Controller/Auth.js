@@ -5,18 +5,26 @@ import dotenv from "dotenv";
 export const signIn = async (req, res) => {
     const { name, email, password, shopName, shopLocation } = req.body;
     try {
-        const normalizedEmail = email.toLowerCase();
+
+        if (!name || !email || !password || !shopName || !shopLocation) {
+            return res.status(400).json({
+                status: "failed",
+                message: "Please fill out all required authentication fields."
+            });
+        }
+
+        const normalizedEmail = email.toLowerCase().trim();
         const oldUser = await User.findOne({ email: normalizedEmail });
         if(oldUser) return res.status(400).json({
             status : "failed",
             message : "User Already Exists"
         })
         const user = await User.create({
-            normalizedEmail,
-            email,
-            password,
-            shopName,
-            shopLocation
+            name: name,
+            email: normalizedEmail,
+            password: password,
+            shopName: shopName,
+            shopLocation : shopLocation
         });
 
         res.status(201).json({
