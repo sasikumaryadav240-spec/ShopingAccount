@@ -29,7 +29,7 @@ export const createSale = async (req, res) => {
             products.push({
                 productId : productDoc._id,
                 quantity : item.quantity,
-                name : item.name,
+                name : productDoc.name,
                 price : totalItemAmount
             });
         }
