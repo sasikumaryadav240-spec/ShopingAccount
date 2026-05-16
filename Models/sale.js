@@ -13,6 +13,11 @@ const saleSchema = new mongoose.Schema({
                 ref: "products",
                 required: true
             },
+            name: {
+                type: String,
+                required: true,
+                trim: true
+            },
             quantity: { type: Number, required: true },
             price: { type: Number, trim : true }
         }
