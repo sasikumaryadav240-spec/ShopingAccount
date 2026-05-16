@@ -103,8 +103,6 @@ export const monthlyProductLogic = async (req, res) => {
     try {
         const userId = req.user.userId;
         const startOfDate = new Date();
-        startOfDate.getMonth();
-        startOfDate.setDate(1);
         startOfDate.setHours(0,0,0,0)
 
         const endOfToday = new Date();
@@ -150,7 +148,7 @@ export const monthlyProductLogic = async (req, res) => {
                 }
             },
             {
-                $sort : { totalSalesAmount : -1}
+                $sort : { noOfSales : -1}
             }
         ]);
 

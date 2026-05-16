@@ -238,7 +238,7 @@ export const monthTopProducts = async (req, res) => {
             },
             {
                 $sort : {
-                    totalAmount : -1
+                    totalSales : -1
                 }
             },
             {
