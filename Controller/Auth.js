@@ -6,7 +6,7 @@ export const signIn = async (req, res) => {
     const { name, email, password, shopName, shopLocation } = req.body;
     try {
         const normalizedEmail = email.toLowerCase();
-        const oldUser = await User.findOne({ normalizedEmail });
+        const oldUser = await User.findOne({ email: normalizedEmail });
         if(oldUser) return res.status(400).json({
             status : "failed",
             message : "User Already Exists"
