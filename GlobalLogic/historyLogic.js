@@ -51,7 +51,7 @@ export const getCombinedMonthlyReport = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        const { month, year } = req.query;
+        const { month, year } = req.body;
 
         if (!month || !year) {
             return res.status(400).json({ 
