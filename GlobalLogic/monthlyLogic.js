@@ -244,7 +244,7 @@ export const monthTopProducts = async (req, res) => {
             {
                 $project : {
                     _id : 1,
-                    productName : productName,
+                    productName : "$productName",
                     totalSales : 1,
                     totalAmount : 1
                 }
