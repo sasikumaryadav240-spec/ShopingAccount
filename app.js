@@ -12,6 +12,7 @@ import { salesLogicRouter } from "./router/salesLogicRouter.js";
 import { montlyRouter } from "./router/monthlyRouter.js";
 import { profileRouter } from "./router/profileRouter.js";
 import { authLogicRouter } from "./router/authLogicRouter.js";
+import { historyRouter } from "./router/historyRouter.js";
 
 mongoDB();
 
@@ -31,5 +32,6 @@ app.use("/api", verifyToken, salesLogicRouter);
 app.use("/api", verifyToken, montlyRouter);
 app.use("/api", verifyToken, profileRouter);
 app.use("/api", verifyToken, authLogicRouter);
+app.use("/api", verifyToken, historyRouter);
 
 app.listen(5000);
