@@ -123,3 +123,54 @@ export const getCombinedMonthlyReport = async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 };
+
+export const dailyHistory = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        
+        const { date } = req.query;
+
+        if (!date) {
+            return res.status(400).json({ 
+                status: "failed", 
+                message: "Please provide a valid target date string parameter." 
+            });
+        }
+
+        const startOfDate = new Date(date);
+        startOfDate.setHours(0, 0, 0, 0);
+
+        const endOfDate = new Date(date);
+        endOfDate.setHours(23, 59, 59, 999);
+
+        if (isNaN(startOfDate.getTime())) {
+            return res.status(400).json({ status: "failed", message: "Invalid date format configuration." });
+        }
+
+        const dailySales = await Sale.find({
+            userId: new mongoose.Types.ObjectId(userId),
+            createdAt: {
+                $gte: startOfDate,
+                $lte: endOfDate
+            }
+        })
+        .sort({ createdAt: -1 })
+        .lean();
+
+        const grossDayCollection = dailySales.reduce((sum, item) => sum + item.totalAmount, 0);
+
+        res.status(200).json({
+            status: "success",
+            dateQuery: date,
+            summary: {
+                totalSalesCount: dailySales.length,
+                totalCollection: grossDayCollection
+            },
+            sales: dailySales
+        });
+
+    } catch (error) {
+        console.error("Daily history backend calculation error:", error);
+        res.status(500).json({ status: "error", message: error.message });
+    }
+};
